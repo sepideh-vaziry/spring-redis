@@ -3,6 +3,7 @@ package com.example.springredis.product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
@@ -44,9 +45,9 @@ public class ProductService {
   }
 
   @Caching(evict = {
-      @CacheEvict(cacheNames = "productList", allEntries = true),
-      @CacheEvict(cacheNames = "product", key = "#id.toString()")
+      @CacheEvict(cacheNames = "productList", allEntries = true)
   })
+  @CachePut(cacheNames = "product", key = "#id.toString()")
   public ProductEntity partialUpdate(Long id, BigDecimal price, int quantity) {
     ProductEntity productEntity = productRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Product was not found."));
